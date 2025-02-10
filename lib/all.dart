@@ -6,6 +6,9 @@ import 'package:blinkit/bloc/state.dart';
 
 import 'package:blinkit/comp/tf.dart';
 import 'package:blinkit/electronics.dart';
+import 'package:blinkit/fashion.dart';
+import 'package:blinkit/groceries.dart';
+import 'package:blinkit/profile.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,12 +27,13 @@ class _AllState extends State<All> {
   late List<Map<String, dynamic>> items;
 
  final ScrollController _scrollController = ScrollController();
-
+  late int selectedIndex = 0;
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
     context.read<ListBloc>().add(LoadItems());
+    _getSelectedIndex();
      
   }
 
@@ -39,20 +43,33 @@ class _AllState extends State<All> {
       context.read<ListBloc>().add(LoadMoreItems()); 
     }
   }
+    void _getSelectedIndex() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedIndex = prefs.getInt("index") ?? 0;
+    });
+  }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
-   
+  
   
   @override
   Widget build(BuildContext context) {
+    final List<Color> appBarColors = [
+    Colors.amber,
+    Colors.green,
+    Colors.orange,
+    Colors.lightBlueAccent
+  ];
    
+    
     final height=MediaQuery.of(context).size.height;
     
-    return Scaffold(
+    return Scaffold(  
       body: BlocBuilder<ListBloc, ListState>(
         builder: (context, state) {
           if (state.isLoading && state.items.isEmpty) {
@@ -62,23 +79,34 @@ class _AllState extends State<All> {
           if (state.errorMessage.isNotEmpty) {
             return Center(child: Text(state.errorMessage));
           }
+         
  return DefaultTabController(
-        length: 3,
+        length: 4,
         child: NestedScrollView(
           
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverAppBar(
-                backgroundColor: Colors.amber,
+                backgroundColor: appBarColors[selectedIndex],
                 expandedHeight: 30, 
                 pinned: false, 
                 floating: false,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
-                    color: Colors.amber,
+                    color:  appBarColors[state.ind],
                     alignment: Alignment.center,
-                    child: ListTile(title: Text("Blinkit",style: Theme.of(context).textTheme.headlineSmall,),
-                    trailing: Icon(Icons.account_circle,size: 40,),)
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: ListTile(title: Text("Blinkit",style: Theme.of(context).textTheme.headlineSmall,),
+                      trailing: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Profile()),
+                      );
+                        },
+                        child: CircleAvatar(backgroundColor: Colors.white,child: Icon(Icons.person,color: Colors.black,size: 30,))),),
+                    )
                   ),
                 ),
               ),
@@ -90,13 +118,14 @@ class _AllState extends State<All> {
                     
                   ),
                 ),
-                 SliverFillRemaining(
-                  
+                SliverFillRemaining(
+                   
               child: TabBarView(
                 children: [
                   alls(items: state.items),
                   Electronics(),
-                  Center(child: Text('Content for Tab 3')),
+                  Fashion(),
+                  Groceries()
                 ],
               ),
             ),
@@ -119,17 +148,18 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
   
   // ignore: prefer_typing_uninitialized_variables
   var maxHeight;
-
+  int _selectedIndex = 0;
+   final List<Color> appBarColors = [
+    Colors.amber,
+    Colors.green,
+    Colors.orange,
+    Colors.lightBlueAccent
+  ];
   _SliverPersistentHeaderWithTabBarDelegate({
     required this.minHeight,
     required this.maxHeight,
   });
-   int _selectedIndex = 0;
-   final List<Color> _appBarColors = [
-    Colors.amber,
-    Colors.green,
-    Colors.orange,
-  ];
+   
   @override
   double get minExtent => minHeight; 
   @override
@@ -144,8 +174,19 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
         double percentage = (shrinkOffset / maxExtent).clamp(0.0, 1.0);
     
     Color color = Color.lerp(Colors.amber, Colors.grey, percentage)!;
+    return BlocBuilder<ListBloc, ListState>(
+        builder: (context, state) {
+          
+          if (state.isLoading && state.items.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.errorMessage.isNotEmpty) {
+            return Center(child: Text(state.errorMessage));
+          }
+          
     return Container(
-      color: _selectedIndex==0 ? color : _appBarColors[_selectedIndex],
+      color: state.ind==0 ? color : appBarColors[state.ind],
       child: Padding(
         padding: const EdgeInsets.only(top:12.0),
         child: Column(
@@ -161,8 +202,10 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
         
                 _selectedIndex = index;
                 
-                SharedPreferences prefs=await SharedPreferences.getInstance();
-                await prefs.setInt("index", _selectedIndex);
+                context
+                            .read<ListBloc>()
+                            .add(updateIndex(_selectedIndex));
+                
               
             },
               isScrollable: true,
@@ -171,6 +214,7 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
                 tabs('All',Icon(Icons.all_inclusive,size: 30.r,)),
                 tabs('Electronics',Icon(Icons.speaker,size: 30.r,)),
                 tabs('Fashion',Icon(Icons.face_sharp,size: 30.r,)),
+                tabs('Groceries',Icon(Icons.toys,size: 30.r,)),
                 tabs('Kids',Icon(Icons.toys,size: 30.r,)),
                 tabs('Gifts',Icon(Icons.card_giftcard_sharp,size: 30.r,)),
                 
@@ -186,6 +230,7 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
         ),
       ),
     );
+        });
   }
 
   Tab tabs(name,icons) => Tab(text: name,icon: icons);

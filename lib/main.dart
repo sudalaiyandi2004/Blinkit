@@ -1,5 +1,6 @@
 
 import 'package:blinkit/appBar.dart';
+import 'package:blinkit/bloc/api.dart';
 import 'package:blinkit/bloc/bloc.dart';
 
 
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         theme: lightTheme,
         debugShowCheckedModeBanner: false,
         home: BlocProvider(
-        create: (context) => ListBloc(),
+        create: (context) => ListBloc(userRepos: UserRepositors()),
         child: Home(),
       ),
       ),

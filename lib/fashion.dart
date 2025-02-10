@@ -1,23 +1,27 @@
 
 import 'package:blinkit/bloc/bloc.dart';
 import 'package:blinkit/bloc/state.dart';
+import 'package:blinkit/cards.dart';
 
-import 'package:blinkit/grid.dart';
-
+import 'package:blinkit/smallCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-class Electronics extends StatefulWidget {
+class Fashion extends StatefulWidget {
 
-  const Electronics({super.key});
+  const Fashion({super.key});
 
   @override
-  State<Electronics> createState() => _ElectronicsState();
+  State<Fashion> createState() => _FashionState();
 }
 
-class _ElectronicsState extends State<Electronics> {
+class _FashionState extends State<Fashion> {
   
-  
+  List<Map<String, dynamic>> filterByGender(List<Map<String, dynamic>> items, String gender) {
+  return items.where((item) {
+    return item['gender'] == gender;
+  }).toList();
+}
   @override
   Widget build(BuildContext context) {
     final width=MediaQuery.of(context).size.width;
@@ -40,10 +44,19 @@ class _ElectronicsState extends State<Electronics> {
                   children: [
                     SizedBox(height: 10.h,),
                     
-                      Text("Sounds",style:Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold)),
-                      SizedBox(height: 20,),
-                      Gird(originalItems: state.originalItems['electronics'] ?? []),
-                      SizedBox(height: 20,),
+                      Text("Men's Clothing",style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),),
+                      SizedBox(height: 20.h,),
+                      
+                      Cards(originalItems: filterByGender(state.originalItems['Fashion'] ?? [], 'male')),
+                      SizedBox(height: 20.h,),
+                      
+                      
+                      Center(child: ElevatedButton(onPressed: (){}, style: ElevatedButton.styleFrom(foregroundColor: Colors.deepPurpleAccent,minimumSize: Size(width*0.9, 50)), child: Text("See all products >",style: Theme.of(context).textTheme.titleMedium,),)),
+                      SizedBox(height: 20.h,),
+                      Text("Women's Clothing",style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),),
+                      SizedBox(height: 20.h,),
+                      SmallCard(originalItems: filterByGender(state.originalItems['Fashion'] ?? [], 'female')),
+                      SizedBox(height: 20.h,),
                       Center(child: ElevatedButton(onPressed: (){}, style: ElevatedButton.styleFrom(foregroundColor: Colors.deepPurpleAccent,minimumSize: Size(width*0.9, 50)), child: Text("See all products >",style: Theme.of(context).textTheme.titleMedium,),))
                 
                       

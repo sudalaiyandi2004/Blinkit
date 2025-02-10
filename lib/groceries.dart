@@ -7,15 +7,15 @@ import 'package:blinkit/grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-class Electronics extends StatefulWidget {
+class Groceries extends StatefulWidget {
 
-  const Electronics({super.key});
+  const Groceries({super.key});
 
   @override
-  State<Electronics> createState() => _ElectronicsState();
+  State<Groceries> createState() => _GroceriesState();
 }
 
-class _ElectronicsState extends State<Electronics> {
+class _GroceriesState extends State<Groceries> {
   
   
   @override
@@ -40,9 +40,9 @@ class _ElectronicsState extends State<Electronics> {
                   children: [
                     SizedBox(height: 10.h,),
                     
-                      Text("Sounds",style:Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold)),
+                      Text("Groceries",style:Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold)),
                       SizedBox(height: 20,),
-                      Gird(originalItems: state.originalItems['electronics'] ?? []),
+                      Gird(originalItems: state.originalItems['grocery'] ?? []),
                       SizedBox(height: 20,),
                       Center(child: ElevatedButton(onPressed: (){}, style: ElevatedButton.styleFrom(foregroundColor: Colors.deepPurpleAccent,minimumSize: Size(width*0.9, 50)), child: Text("See all products >",style: Theme.of(context).textTheme.titleMedium,),))
                 

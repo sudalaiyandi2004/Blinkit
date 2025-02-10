@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SmallCard extends StatefulWidget {
+  final List<Map<String, dynamic>> originalItems;
+  const SmallCard({super.key,required this.originalItems});
   
-  const SmallCard({super.key});
-
   @override
   State<SmallCard> createState() => _SmallCardState();
 }
@@ -37,13 +37,13 @@ class _SmallCardState extends State<SmallCard> {
       scrollDirection: Axis.horizontal,
       child: Row(
         spacing: 10,
-        children: state.items.map((data){
+        children: widget.originalItems.map((data){
           return Column(
             children: [
               Container(
                 decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(data['img']),
+                          image: NetworkImage(data['img']),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(10.r),
@@ -53,7 +53,7 @@ class _SmallCardState extends State<SmallCard> {
               
               ),
               SizedBox(height: 5,),
-              Text(data['name'])
+              Text(data['name'],style: Theme.of(context).textTheme.titleMedium)
             ],
           );
         
