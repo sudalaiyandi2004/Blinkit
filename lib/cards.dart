@@ -57,15 +57,8 @@ class _CardsState extends State<Cards> {
                     image: NetworkImage(data['img']),
                     fit: BoxFit.cover,
                   ),
-                  borderRadius: BorderRadius.circular(10.r),
-                  boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.3),
-        offset: Offset(4, 4),  
-        blurRadius: 8, 
-        spreadRadius: 1, 
-      ),
-    ],
+                  borderRadius: BorderRadius.circular(18.r),
+                  
                 ),
                 width: width * 0.3,
                 height: 150.h,
@@ -75,111 +68,118 @@ class _CardsState extends State<Cards> {
                   children: [
                     data['category']!='Fashion' ?
                     Padding(
-                      padding: EdgeInsets.all(5.r),
+                      padding: EdgeInsets.all(8.r),
                       child: Image.asset(
-                        "assets/4.png",
-                        width: 20.w,
-                        height: 20.h,
+                        "assets/veg.png",
+                        width: 13.w,
+                        height: 13.h,
                       ),
                     ) : Container(),
                
                     data['val'] <= 0
-                        ? ElevatedButton(
-                            onPressed: () {
-                              final updatedItem = {
-                          ...data,
-                          'val': data['val']+1
+                        ? Padding(
+                          padding: EdgeInsets.all(5.r),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                final updatedItem = {
+                            ...data,
+                            'val': data['val']+1
+                                
+                          };
+                          
+                          context
+                              .read<ListBloc>()
+                              .add(UpdateItem(data['_id'], updatedItem));
+                                context
+                              .read<ListBloc>()
+                              .add(counting('add'));
+                               
                               
-                        };
-                        
-                        context
-                            .read<ListBloc>()
-                            .add(UpdateItem(data['_id'], updatedItem));
+                          
+                                              
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 4.h),
+                                foregroundColor: Colors.green,
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  side: BorderSide(width: 1.w, color: Colors.green),
+                                ),
+                              ),
+                              child: Text("ADD",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
+                            ),
+                        )
+                        : Padding(
+                          padding: EdgeInsets.all(5.r),
+                          child: Container(
+                              height: 30.h,
+                              padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 5.h),
+                              width: width * 0.2,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.r),
+                                color: Colors.green,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      
+                                       final updatedItem = {
+                            ...data,
+                            'val': data['val']-1
+                                
+                          };
+                          
+                          context
+                              .read<ListBloc>()
+                              .add(UpdateItem(data['_id'], updatedItem));
                               context
-                            .read<ListBloc>()
-                            .add(counting('add'));
-                             
-                            
-                        
-                    
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
-                              foregroundColor: Colors.green,
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.r),
-                                side: BorderSide(width: 2.w, color: Colors.green),
+                              .read<ListBloc>()
+                              .add(counting('sub')); 
+                              
+                          
+                                              
+                                    },
+                                    icon: Icon(Icons.remove, color: Colors.white, size: 14.sp),
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(minWidth: 24.w, minHeight: 24.h),
+                                  ),
+                                  Text(
+                                    data['val'].toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                       final updatedItem = {
+                            ...data,
+                            'val': data['val']+1
+                                
+                          };
+                                                
+                          context
+                              .read<ListBloc>()
+                              .add(UpdateItem(data['_id'], updatedItem));
+                              context
+                              .read<ListBloc>()
+                              .add(counting('add')); 
+                              
+                          
+                                              
+                                    },
+                                    icon: Icon(Icons.add, color: Colors.white, size: 14.sp),
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(minWidth: 24.w, minHeight: 24.h),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Text("ADD"),
-                          )
-                        : Container(
-                            height: 30.h,
-                            width: width * 0.2,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.r),
-                              color: Colors.green,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    
-                                     final updatedItem = {
-                          ...data,
-                          'val': data['val']-1
-                              
-                        };
-                        
-                        context
-                            .read<ListBloc>()
-                            .add(UpdateItem(data['_id'], updatedItem));
-                            context
-                            .read<ListBloc>()
-                            .add(counting('sub')); 
-                            
-                        
-                    
-                                  },
-                                  icon: Icon(Icons.remove, color: Colors.white, size: 14.sp),
-                                  padding: EdgeInsets.zero,
-                                  constraints: BoxConstraints(minWidth: 24.w, minHeight: 24.h),
-                                ),
-                                Text(
-                                  data['val'].toString(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                     final updatedItem = {
-                          ...data,
-                          'val': data['val']+1
-                              
-                        };
-                      
-                        context
-                            .read<ListBloc>()
-                            .add(UpdateItem(data['_id'], updatedItem));
-                            context
-                            .read<ListBloc>()
-                            .add(counting('add')); 
-                            
-                        
-                    
-                                  },
-                                  icon: Icon(Icons.add, color: Colors.white, size: 14.sp),
-                                  padding: EdgeInsets.zero,
-                                  constraints: BoxConstraints(minWidth: 24.w, minHeight: 24.h),
-                                ),
-                              ],
-                            ),
-                          ),
+                        ),
                   ],
                 ),
               ),
@@ -187,12 +187,12 @@ class _CardsState extends State<Cards> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: Colors.deepPurpleAccent,
+                  color: Color(0xffb3b9e8),
                   borderRadius: BorderRadius.circular(5.r),
                 ),
                 child: Text(
                   data['quantity'],
-                  style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                  style: TextStyle(color: Color(0xff6367bb), fontSize: 14.sp,fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(height: 5.h),
@@ -207,13 +207,13 @@ class _CardsState extends State<Cards> {
                   icon(),
                   icon(),
                   icon(),
-                  Text("1032", style: TextStyle(fontSize: 12.sp,fontWeight: FontWeight.bold)),
+                  Text("(1032)", style: TextStyle(fontSize: 12.sp,fontWeight: FontWeight.bold)),
                 ],
               ),
               SizedBox(height: 5.h),
               Row(
                 children: [
-                  Icon(Icons.lock_clock, color: Colors.green, size: 16.sp),
+                  Icon(Icons.timelapse, color: Colors.green, size: 16.sp),
                   SizedBox(width: 4.w),
                   Text(
                     data['time'],
@@ -235,5 +235,5 @@ class _CardsState extends State<Cards> {
         });
   }
 
-  Icon icon() => Icon(Icons.star, color: Colors.yellow, size: 16.sp);
+  Icon icon() => Icon(Icons.star, color: Colors.amber, size: 16.sp);
 }

@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: Colors.blue,
-  scaffoldBackgroundColor: Color(0xFFDBE9F4),
+  scaffoldBackgroundColor: Color(0xFFf0f8fa),
   colorScheme: const ColorScheme.light(
     primary: Colors.black,
     secondary: Colors.white,
@@ -31,7 +31,7 @@ ThemeData lightTheme = ThemeData(
   ),
 
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor: Color(0xFFE7EAE5),
+    backgroundColor: Color(0xFfffffff),
     selectedItemColor: Colors.black,
     selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
     unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),

@@ -56,9 +56,9 @@ class _AllState extends State<All> {
   @override
   Widget build(BuildContext context) {
     final List<Color> appBarColors = [
-      Colors.amber,
+      Color(0xffffac04),
       Colors.green,
-      Colors.orange,
+      Colors.redAccent,
       Colors.lightBlueAccent
     ];
 
@@ -77,38 +77,42 @@ class _AllState extends State<All> {
 
           return DefaultTabController(
             length: 4,
-            child: CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: appBarColors[state.ind],
-                  expandedHeight: 80.r, 
-                  pinned:false,
-                  floating: false,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Container(
-                      color: appBarColors[state.ind],
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: ListTile(
-                          title: Text(
-                            "Blinkit",
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          trailing: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => Profile()),
-                              );
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: Icon(
-                                Icons.person,
-                                color: Colors.black,
-                                size: 30,
+            child: ScrollConfiguration(
+              behavior: ScrollBehavior().copyWith(scrollbars: false),
+              child: CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverAppBar(
+                    backgroundColor: appBarColors[state.ind],
+                    expandedHeight: 80.r, 
+                    pinned:false,
+                    elevation: 0,
+                    floating: false,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Container(
+                        color: appBarColors[state.ind],
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: ListTile(
+                            title: Text(
+                              "Blinkit",
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Profile()),
+                                );
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.black,
+                                  size: 30,
+                                ),
                               ),
                             ),
                           ),
@@ -116,25 +120,25 @@ class _AllState extends State<All> {
                       ),
                     ),
                   ),
-                ),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _SliverPersistentHeaderWithTabBarDelegate(
-                    minHeight: height * 0.2, 
-                    maxHeight: height * 0.2, 
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _SliverPersistentHeaderWithTabBarDelegate(
+                      minHeight: height * 0.2, 
+                      maxHeight: height * 0.2, 
+                    ),
                   ),
-                ),
-                SliverFillRemaining(
-                  child: TabBarView(
-                    children: [
-                      alls(items: state.items),
-                      Electronics(),
-                      Fashion(),
-                      Groceries(),
-                    ],
+                  SliverFillRemaining(
+                    child: TabBarView(
+                      children: [
+                        alls(items: state.items),
+                        Electronics(),
+                        Fashion(),
+                        Groceries(),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -147,9 +151,9 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
   final double minHeight;
   final double maxHeight;
   final List<Color> appBarColors = [
-    Colors.amber,
+    Color(0xffffac04),
     Colors.green,
-    Colors.orange,
+    Colors.redAccent,
     Colors.lightBlueAccent
   ];
 
@@ -172,7 +176,7 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
   ) {
     double percentage = (shrinkOffset / maxExtent).clamp(0.0, 1.0);
 
-    Color color = Color.lerp(Colors.amber, Colors.grey, percentage)!;
+    Color color = Color.lerp(Color(0xffffac04), Color(0xffd6d6d6), percentage)!;
 
     return BlocBuilder<ListBloc, ListState>(
       builder: (context, state) {
@@ -185,7 +189,11 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
         }
 
         return Container(
-          color: state.ind == 0 ? color : appBarColors[state.ind],
+          
+            
+            color: state.ind == 0 ? color : appBarColors[state.ind],
+          
+          
           child: Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: Column(
@@ -195,24 +203,30 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
                   padding: EdgeInsets.all(10),
                   child: Texts(),
                 ),
-                TabBar(
-                  isScrollable: true,
-                  tabAlignment: TabAlignment.start,
-                  onTap: (index) async {
-                      context.read<ListBloc>().add(updateIndex(index));
-                    },
-                  tabs: [
-                    tabs('All', Icon(Icons.all_inclusive, size: 30.r)),
-                    tabs('Electronics', Icon(Icons.speaker, size: 30.r)),
-                    tabs('Fashion', Icon(Icons.face_sharp, size: 30.r)),
-                    tabs('Groceries', Icon(Icons.toys, size: 30.r)),
-                    tabs('Kids', Icon(Icons.toys, size: 30.r)),
-                    tabs('Gifts', Icon(Icons.card_giftcard_sharp, size: 30.r)),
-                  ],
-                  labelStyle: Theme.of(context).textTheme.titleMedium,
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.black,
-                  indicatorColor: Colors.black,
+                Container(
+                  decoration: BoxDecoration(
+                  
+                    border: Border(bottom: BorderSide(color:Colors.transparent))
+                  ),
+                  child: TabBar(
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.start,
+                    onTap: (index) async {
+                        context.read<ListBloc>().add(updateIndex(index));
+                      },
+                    tabs: [
+                      tabs('All', Icon(Icons.shopping_bag, size: 30.r)),
+                      tabs('Electronics', Icon(Icons.headphones_outlined, size: 30.r)),
+                      tabs('Fashion', Icon(Icons.face_sharp, size: 30.r)),
+                      tabs('Groceries', Icon(Icons.local_grocery_store_rounded, size: 30.r)),
+                      tabs('Kids', Icon(Icons.toys, size: 30.r)),
+                      tabs('Gifts', Icon(Icons.card_giftcard_sharp, size: 30.r)),
+                    ],
+                    labelStyle: Theme.of(context).textTheme.titleMedium,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Color(0xFF24181c),
+                    indicatorColor: Colors.black,
+                  ),
                 ),
               ],
             ),
