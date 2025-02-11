@@ -97,6 +97,7 @@ class _allsState extends State<alls> {
               
               
               if (state.cart > 0)
+              
                 Positioned(
                   right: 0,
                   left: 0,
@@ -129,10 +130,12 @@ class _allsState extends State<alls> {
                                     radius: 20,
                                     backgroundImage: AssetImage('assets/3.jpeg'),
                                 ),
-                                Positioned(left: 20, child: CircleAvatar(radius: 20, backgroundImage: AssetImage('assets/3.jpeg'))),
-                                Positioned(left: 40, child: CircleAvatar(radius: 20, backgroundImage: AssetImage('assets/3.jpeg')))
+                                state.cart>1 ?
+                                Positioned(left: 20, child: CircleAvatar(radius: 20, backgroundImage: AssetImage('assets/3.jpeg'))) : Container(),
+                               
                               ],
                             ),
+                            
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

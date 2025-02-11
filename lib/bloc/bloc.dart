@@ -41,6 +41,13 @@ class ListBloc extends Bloc<ListEvent, ListState> {
     if (state.isLoading) return;
 
     var ite = await userRepos.fetchItems();
+    var ites=await userRepos.fetchBanner();
+    List<Map<String, dynamic>> convertToMapList(List<dynamic> dynamicList) {
+  return dynamicList.whereType<Map<String, dynamic>>().toList();
+}
+    List<Map<String, dynamic>> banner = [];
+    banner=convertToMapList(ites);
+    
     products = ite.map((item) => Map<String, dynamic>.from(item)).toList();
 
     Map<String, List<Map<String, dynamic>>> categorizedItems = {};
@@ -56,6 +63,7 @@ class ListBloc extends Bloc<ListEvent, ListState> {
 
       emit(state.copyWith(
         items: newItems,
+        filteredItems: banner,
         originalItems: Map<String, List<Map<String, dynamic>>>.from(categorizedItems),
         isLoading: false,
         hasMoreItems: newItems.length >= _itemsPerPage,
@@ -132,11 +140,12 @@ class ListBloc extends Bloc<ListEvent, ListState> {
 
   void _onCounting(counting event, Emitter<ListState> emit) async {
     num vals = 0;
-    for (var i = 0; i < state.items.length; i++) {
-      var item = state.items[i];
-      vals += item['val'];
-    }
-
+   if(event.op=='add'){
+    vals=state.cart+1;
+   }
+   else{
+    vals=state.cart-1;
+   }
     emit(state.copyWith(cart: vals)); 
   }
 

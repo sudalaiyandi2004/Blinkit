@@ -47,7 +47,7 @@ class _CardsState extends State<Cards> {
       child: Row(
         spacing: 10,
         children: widget.originalItems.map((data) {
-         
+        
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -58,6 +58,14 @@ class _CardsState extends State<Cards> {
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(10.r),
+                  boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.3),
+        offset: Offset(4, 4),  
+        blurRadius: 8, 
+        spreadRadius: 1, 
+      ),
+    ],
                 ),
                 width: width * 0.3,
                 height: 150.h,
@@ -65,7 +73,7 @@ class _CardsState extends State<Cards> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                  
+                    data['category']!='Fashion' ?
                     Padding(
                       padding: EdgeInsets.all(5.r),
                       child: Image.asset(
@@ -73,7 +81,7 @@ class _CardsState extends State<Cards> {
                         width: 20.w,
                         height: 20.h,
                       ),
-                    ),
+                    ) : Container(),
                
                     data['val'] <= 0
                         ? ElevatedButton(
@@ -89,7 +97,7 @@ class _CardsState extends State<Cards> {
                             .add(UpdateItem(data['_id'], updatedItem));
                               context
                             .read<ListBloc>()
-                            .add(counting());
+                            .add(counting('add'));
                              
                             
                         
@@ -130,7 +138,7 @@ class _CardsState extends State<Cards> {
                             .add(UpdateItem(data['_id'], updatedItem));
                             context
                             .read<ListBloc>()
-                            .add(counting()); 
+                            .add(counting('sub')); 
                             
                         
                     
@@ -160,7 +168,7 @@ class _CardsState extends State<Cards> {
                             .add(UpdateItem(data['_id'], updatedItem));
                             context
                             .read<ListBloc>()
-                            .add(counting()); 
+                            .add(counting('add')); 
                             
                         
                     

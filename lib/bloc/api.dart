@@ -34,6 +34,30 @@ class UserRepositors {
     return [];
   }
   }
+  Future<List<dynamic>> fetchBanner() async {
+    try {
+   
+    Response response = await Dio().get("http://localhost:4000/itemss",
+      
+      options: Options(
+        receiveTimeout: Duration(seconds: 5),
+        sendTimeout: Duration(seconds: 5),
+      ),
+    );
+    
+    return response.data;
+  } on DioException catch (e) {
+    
+    if (e.type == DioExceptionType.connectionTimeout) {
+    
+    } else if (e.type == DioExceptionType.receiveTimeout) {
+  
+    } else {
+   
+    }
+    return [];
+  }
+  }
 
 
   

@@ -38,7 +38,8 @@
   }
   // ignore: camel_case_types
   class counting extends ListEvent{
-    
+    final String op;
+    counting(this.op);
   }
   // ignore: camel_case_types
   class updateIndex extends ListEvent{

@@ -47,6 +47,15 @@ class _SmallCardState extends State<SmallCard> {
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(10.r),
+                        boxShadow: [
+      BoxShadow(
+        // ignore: deprecated_member_use
+        color: Colors.black.withOpacity(0.3),
+        offset: Offset(4, 4),  
+        blurRadius: 8, 
+        spreadRadius: 1, 
+      ),
+    ],
                       ),
                       width: width * 0.3,
                       height: 130.h,

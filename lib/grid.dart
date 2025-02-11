@@ -37,7 +37,18 @@ class _GirdState extends State<Gird> {
   itemBuilder: (context, index) {
     var data = widget.originalItems[index];
     return Container(
-      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+      BoxShadow(
+        // ignore: deprecated_member_use
+        color: Colors.black.withOpacity(0.3),
+        offset: Offset(4, 4),  
+        blurRadius: 8, 
+        spreadRadius: 1, 
+      ),
+    ],
+      ),
+      
       height: 130.h,
       width: 0.3*width,
       child: Column(

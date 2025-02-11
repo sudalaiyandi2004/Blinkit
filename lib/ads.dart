@@ -1,55 +1,85 @@
+import 'package:blinkit/bloc/bloc.dart';
+import 'package:blinkit/bloc/state.dart';
 import 'package:blinkit/comp/button.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// ignore: use_key_in_widget_constructors
 class ImageCarousel extends StatelessWidget {
   final List<String> imageUrls = [
-    
     'assets/1.jpeg',
     'assets/5.jpeg',
     'assets/1.jpeg',
     'assets/5.jpeg',
   ];
 
+  ImageCarousel({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final width=MediaQuery.of(context).size.width;
+    return BlocBuilder<ListBloc, ListState>(
+        builder: (context, state) {
+          
+          if (state.isLoading && state.items.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.errorMessage.isNotEmpty) {
+            return Center(child: Text(state.errorMessage));
+          }
     return Scaffold(
-     
       body: Center(
         child: CarouselSlider(
           options: CarouselOptions(
-            height:250.r,
-            
-            autoPlay: false, 
-            enlargeCenterPage: false, 
+            height: 250.h, 
+            autoPlay: false,
+            enlargeCenterPage: false,
             aspectRatio: 16 / 9,
             viewportFraction: 0.97,
             autoPlayInterval: Duration(seconds: 3),
             autoPlayAnimationDuration: Duration(milliseconds: 800),
             autoPlayCurve: Curves.fastOutSlowIn,
           ),
-          items: imageUrls.map((url) {
+          items: state.filteredItems.map((item) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4).r,
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
               child: Container(
-                width: width*0.95,
+                width: 0.95.sw, 
                 decoration: BoxDecoration(
-                  image: DecorationImage(image: AssetImage(url),fit: BoxFit.cover),
-                  
-                  borderRadius: BorderRadius.circular(10)
+                  image: DecorationImage(
+                    image: NetworkImage(item['img']),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.circular(10.r), 
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0.r), 
                   child: Column(
+                    
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("No time for\na diaper run?",style: Theme.of(context).textTheme.headlineSmall,),
-                      Text("Get baby care\nessentails in minutes",style: Theme.of(context).textTheme.titleMedium),
-                      Button()
+                      SizedBox(
+                        width: 0.5.sw,
+                        child: Text(
+                          item['title'],
+                          softWrap: true,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 0.5.sw,
+                        
+                        child: Text(
+                          softWrap: true,
+                          maxLines: 2,
+                          item['subtitle'],
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                      SizedBox(height: 10.h), 
+                      Button(), 
                     ],
                   ),
                 ),
@@ -59,5 +89,6 @@ class ImageCarousel extends StatelessWidget {
         ),
       ),
     );
+        });
   }
 }
