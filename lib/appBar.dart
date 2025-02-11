@@ -50,7 +50,7 @@ class _HomeState extends State<Home> {
           body: _pages[_currentIndex],
           floatingActionButton: state.cart > 0
               ? Padding(
-                  padding: const EdgeInsets.only(bottom: 100.0), // Move button up slightly
+                  padding: const EdgeInsets.only(bottom: 100.0), 
                   child: FloatingActionButton.extended(
                     onPressed: () {},
                     backgroundColor: Colors.green,
