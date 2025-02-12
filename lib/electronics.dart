@@ -43,7 +43,17 @@ class _ElectronicsState extends State<Electronics> {
                     SizedBox(height: 20,),
                     Gird(originalItems: state.originalItems['electronics'] ?? []),
                     SizedBox(height: 20,),
-                    Center(child: ElevatedButton(onPressed: (){}, style: ElevatedButton.styleFrom(foregroundColor: Colors.deepPurpleAccent,minimumSize: Size(width*0.9, 50)), child: Text("See all products >",style: Theme.of(context).textTheme.titleMedium,),))
+                    Center(child: ElevatedButton(onPressed: (){}, style: ElevatedButton.styleFrom(foregroundColor: Colors.deepPurpleAccent,minimumSize: Size(width*0.9, 50)), 
+                     child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "See all products",
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xff115056)),
+                            ),
+                            Icon(Icons.arrow_right,size: 30,color: Color(0xff115056),)
+                          ],
+                        ),))
               
                     
                 ],

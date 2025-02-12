@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:blinkit/about.dart';
 import 'package:blinkit/all.dart';
 import 'package:blinkit/bloc/bloc.dart';
@@ -14,25 +16,20 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   int _currentIndex = 0;
   List<Widget> _pages = [];
-
   void _onTabSelected(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
 
-  @override
+   @override
   void initState() {
     super.initState();
-    setState(() {
-      _pages = [All(), About(), History(), Print()];
-    });
+    _pages = [All(), About(), History(), Print()];
   }
-
-  final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +43,14 @@ class _HomeState extends State<Home> {
           return Center(child: Text(state.errorMessage));
         }
 
+       
+        
+
         return Scaffold(
-          body: _pages[_currentIndex],
+          body:IndexedStack(index: _currentIndex,children: _pages,),
           floatingActionButton: state.cart > 0
               ? Padding(
-                  padding: const EdgeInsets.only(bottom: 100.0), // Move button up slightly
+                  padding: const EdgeInsets.only(bottom: 100.0),
                   child: FloatingActionButton.extended(
                     onPressed: () {},
                     backgroundColor: Colors.green,

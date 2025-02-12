@@ -20,12 +20,7 @@ class Cards extends StatefulWidget {
 class _CardsState extends State<Cards> {
   late List<Map<String, dynamic>> datas;
 
-  @override
-  void initState() {
-    super.initState();
-    
   
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +43,12 @@ class _CardsState extends State<Cards> {
         spacing: 10,
         children: widget.originalItems.map((data) {
         
+          
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
+                
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(data['img']),
@@ -69,6 +66,7 @@ class _CardsState extends State<Cards> {
                     data['category']!='Fashion' ?
                     Padding(
                       padding: EdgeInsets.all(8.r),
+                      
                       child: Image.asset(
                         "assets/veg.png",
                         width: 13.w,
@@ -99,7 +97,7 @@ class _CardsState extends State<Cards> {
                                               
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 4.h),
+                                padding: EdgeInsets.symmetric(horizontal: 0.5.w, vertical: 4.h),
                                 foregroundColor: Colors.green,
                                 backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
@@ -185,7 +183,7 @@ class _CardsState extends State<Cards> {
               ),
               SizedBox(height: 8.h),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                 decoration: BoxDecoration(
                   color: Color(0xffb3b9e8),
                   borderRadius: BorderRadius.circular(5.r),

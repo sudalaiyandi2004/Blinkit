@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:blinkit/bloc/bloc.dart';
 import 'package:blinkit/bloc/state.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +43,7 @@ class _SmallCardState extends State<SmallCard> {
           return Column(
             children: [
               Container(
+                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                         image: DecorationImage(
                           image: NetworkImage(data['img']),

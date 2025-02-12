@@ -36,7 +36,7 @@ class ImageCarousel extends StatelessWidget {
             autoPlay: false,
             enlargeCenterPage: false,
             aspectRatio: 16 / 9,
-            viewportFraction: 1,
+            viewportFraction: 1.07,
             autoPlayInterval: Duration(seconds: 3),
             autoPlayAnimationDuration: Duration(milliseconds: 800),
             autoPlayCurve: Curves.fastOutSlowIn,

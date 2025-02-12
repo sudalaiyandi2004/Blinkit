@@ -21,11 +21,12 @@ class All extends StatefulWidget {
   State<All> createState() => _AllState();
 }
 
-class _AllState extends State<All> {
+class _AllState extends State<All> with AutomaticKeepAliveClientMixin<All> {
   late List<Map<String, dynamic>> items;
   final ScrollController _scrollController = ScrollController();
   late int selectedIndex = 0;
-
+   @override
+  bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
@@ -55,8 +56,10 @@ class _AllState extends State<All> {
 
   @override
   Widget build(BuildContext context) {
+     super.build(context);
     final List<Color> appBarColors = [
-      Color(0xffffac04),
+      //Color(0xffffac04),
+      Colors.amber,
       Colors.green,
       Colors.redAccent,
       Colors.lightBlueAccent
@@ -83,6 +86,7 @@ class _AllState extends State<All> {
                 controller: _scrollController,
                 slivers: [
                   SliverAppBar(
+                    
                     backgroundColor: appBarColors[state.ind],
                     expandedHeight: 80.r, 
                     pinned:false,
@@ -151,7 +155,8 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
   final double minHeight;
   final double maxHeight;
   final List<Color> appBarColors = [
-    Color(0xffffac04),
+    //Color(0xffffac04),
+    Colors.amber,
     Colors.green,
     Colors.redAccent,
     Colors.lightBlueAccent
@@ -176,7 +181,7 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
   ) {
     double percentage = (shrinkOffset / maxExtent).clamp(0.0, 1.0);
 
-    Color color = Color.lerp(Color(0xffffac04), Color(0xffd6d6d6), percentage)!;
+    Color color = Color.lerp(Colors.amber, Color(0xffd6d6d6), percentage)!;
 
     return BlocBuilder<ListBloc, ListState>(
       builder: (context, state) {
@@ -190,8 +195,11 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
 
         return Container(
           
+            decoration: BoxDecoration(
+             
+              color: state.ind == 0 ? color : appBarColors[state.ind],
+            ),
             
-            color: state.ind == 0 ? color : appBarColors[state.ind],
           
           
           child: Padding(
@@ -203,30 +211,26 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
                   padding: EdgeInsets.all(10),
                   child: Texts(),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                  
-                    border: Border(bottom: BorderSide(color:Colors.transparent))
-                  ),
-                  child: TabBar(
-                    isScrollable: true,
-                    tabAlignment: TabAlignment.start,
-                    onTap: (index) async {
-                        context.read<ListBloc>().add(updateIndex(index));
-                      },
-                    tabs: [
-                      tabs('All', Icon(Icons.shopping_bag, size: 30.r)),
-                      tabs('Electronics', Icon(Icons.headphones_outlined, size: 30.r)),
-                      tabs('Fashion', Icon(Icons.face_sharp, size: 30.r)),
-                      tabs('Groceries', Icon(Icons.local_grocery_store_rounded, size: 30.r)),
-                      tabs('Kids', Icon(Icons.toys, size: 30.r)),
-                      tabs('Gifts', Icon(Icons.card_giftcard_sharp, size: 30.r)),
-                    ],
-                    labelStyle: Theme.of(context).textTheme.titleMedium,
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Color(0xFF24181c),
-                    indicatorColor: Colors.black,
-                  ),
+                TabBar(
+                  dividerColor: state.ind == 0 ? color : appBarColors[state.ind],
+                  isScrollable: true,
+                  tabAlignment: TabAlignment.start,
+                  onTap: (index) async {
+                      context.read<ListBloc>().add(updateIndex(index));
+                    },
+                  tabs: [
+                    tabs('All', Icon(Icons.shopping_bag, size: 30.r)),
+                    tabs('Electronics', Icon(Icons.headphones_outlined, size: 30.r)),
+                    tabs('Fashion', Icon(Icons.face_sharp, size: 30.r)),
+                    tabs('Groceries', Icon(Icons.local_grocery_store_rounded, size: 30.r)),
+                    tabs('Kids', Icon(Icons.toys, size: 30.r)),
+                    tabs('Gifts', Icon(Icons.card_giftcard_sharp, size: 30.r)),
+                  ],
+                
+                  labelStyle: Theme.of(context).textTheme.titleMedium,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Color(0xFF24181c),
+                  indicatorColor: Colors.black,
                 ),
               ],
             ),

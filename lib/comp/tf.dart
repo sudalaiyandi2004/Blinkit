@@ -14,12 +14,14 @@ class Texts extends StatelessWidget {
     filled: true,
     floatingLabelBehavior: FloatingLabelBehavior.never,
     labelText: '''Search "cookies"''',
-    prefixIcon: Icon(Icons.search, color: Colors.black),
+    labelStyle: TextStyle(fontSize: 18),
+    prefixIcon: Icon(Icons.search, color: Colors.black,),
 
     suffixIcon: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text("|", style: TextStyle(color: Colors.black)),
+        Text("|", style: TextStyle(color: Colors.grey,fontSize: 25)),
+        
         IconButton(
           icon: Icon(Icons.mic, color: Colors.black),
           onPressed: () {},

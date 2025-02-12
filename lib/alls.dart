@@ -22,7 +22,7 @@ class alls extends StatefulWidget {
 // ignore: camel_case_types
 class _allsState extends State<alls> {
   late List<Map<String, dynamic>> items;
-
+ 
   @override
   void initState() {
     super.initState();
@@ -31,6 +31,7 @@ class _allsState extends State<alls> {
 
   @override
   Widget build(BuildContext context) {
+   
     final width = MediaQuery.of(context).size.width;
 
     return BlocBuilder<ListBloc, ListState>(
@@ -42,7 +43,7 @@ class _allsState extends State<alls> {
         if (state.errorMessage.isNotEmpty) {
           return Center(child: Text(state.errorMessage));
         }
-
+        
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -70,9 +71,15 @@ class _allsState extends State<alls> {
                           foregroundColor: Colors.deepPurpleAccent,
                           minimumSize: Size(width * 0.9, 50),
                         ),
-                        child: Text(
-                          "See all products >",
-                          style: Theme.of(context).textTheme.titleMedium,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "See all products",
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xff115056)),
+                            ),
+                            Icon(Icons.arrow_right,size: 30,color: Color(0xff115056),)
+                          ],
                         ),
                       ),
                     ),
@@ -91,9 +98,15 @@ class _allsState extends State<alls> {
                           foregroundColor: Colors.deepPurpleAccent,
                           minimumSize: Size(width * 0.9, 50),
                         ),
-                        child: Text(
-                          "See all products >",
-                          style: Theme.of(context).textTheme.titleMedium,
+                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "See all products",
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xff115056)),
+                            ),
+                            Icon(Icons.arrow_right,size: 30,color: Color(0xff115056),)
+                          ],
                         ),
                       ),
                     ),
@@ -112,9 +125,15 @@ class _allsState extends State<alls> {
                           foregroundColor: Colors.deepPurpleAccent,
                           minimumSize: Size(width * 0.9, 50),
                         ),
-                        child: Text(
-                          "See all products >",
-                          style: Theme.of(context).textTheme.titleMedium,
+                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "See all products",
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xff115056)),
+                            ),
+                            Icon(Icons.arrow_right,size: 30,color: Color(0xff115056),)
+                          ],
                         ),
                       ),
                     ),
@@ -133,9 +152,15 @@ class _allsState extends State<alls> {
                           foregroundColor: Colors.deepPurpleAccent,
                           minimumSize: Size(width * 0.9, 50),
                         ),
-                        child: Text(
-                          "See all products >",
-                          style: Theme.of(context).textTheme.titleMedium,
+                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "See all products",
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Color(0xff115056)),
+                            ),
+                            Icon(Icons.arrow_right,size: 30,color: Color(0xff115056),)
+                          ],
                         ),
                       ),
                     ),
