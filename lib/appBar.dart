@@ -51,6 +51,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           floatingActionButton: state.cart > 0
               ? Padding(
                   padding: const EdgeInsets.only(bottom: 100.0),
+                
                   child: FloatingActionButton.extended(
                     onPressed: () {},
                     backgroundColor: Colors.green,
