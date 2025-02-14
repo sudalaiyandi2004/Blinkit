@@ -1,13 +1,13 @@
-import 'package:blinkit/bloc/bloc.dart';
-import 'package:blinkit/bloc/event.dart';
-import 'package:blinkit/bloc/state.dart';
+
+import 'package:blinkit/blocs/items_bloc/items_bloc.dart';
+import 'package:blinkit/models/items.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Cards extends StatefulWidget {
-  final List<Map<String, dynamic>> originalItems;
+  final String originalItems;
 
   
 
@@ -19,30 +19,29 @@ class Cards extends StatefulWidget {
 
 class _CardsState extends State<Cards> {
   late List<Map<String, dynamic>> datas;
-
-  
+  late final AuthBloc authBloc;
+  @override
+  void initState(){
+    super.initState();
+      authBloc = BlocProvider.of<AuthBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     
-    return BlocBuilder<ListBloc, ListState>(
+    return BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           
-          if (state.isLoading && state.items.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.errorMessage.isNotEmpty) {
-            return Center(child: Text(state.errorMessage));
-          }
+         if(state is StateData){
+             
        
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         spacing: 10,
-        children: widget.originalItems.map((data) {
-        
+        children: ((authBloc.stateData.items ?? {})[widget.originalItems] ?? []).map((data) {
+          
           
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +50,7 @@ class _CardsState extends State<Cards> {
                 
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(data['img']),
+                    image: NetworkImage(data.img),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(18.r),
@@ -63,7 +62,7 @@ class _CardsState extends State<Cards> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    data['category']!='Fashion' ?
+                    data.category!='Fashion' ?
                     Padding(
                       padding: EdgeInsets.all(8.r),
                       
@@ -74,23 +73,23 @@ class _CardsState extends State<Cards> {
                       ),
                     ) : Container(),
                
-                    data['val'] <= 0
+                    data.val <= 0
                         ? Padding(
                           padding: EdgeInsets.all(5.r),
                           child: ElevatedButton(
                               onPressed: () {
-                                final updatedItem = {
-                            ...data,
-                            'val': data['val']+1
-                                
-                          };
+                              final updatedItem = Items.fromJson({
+                                ...data.toJson(),
+                                'val': data.val + 1,
+                              });
+                             
                           
-                          context
-                              .read<ListBloc>()
-                              .add(UpdateItem(data['_id'], updatedItem));
-                                context
-                              .read<ListBloc>()
-                              .add(counting('add'));
+                         context
+                              .read<AuthBloc>()
+                              .add(UpdateItems(data.id, updatedItem,'add'));
+                              
+                            
+                              
                                
                               
                           
@@ -124,18 +123,15 @@ class _CardsState extends State<Cards> {
                                   IconButton(
                                     onPressed: () {
                                       
-                                       final updatedItem = {
-                            ...data,
-                            'val': data['val']-1
-                                
-                          };
-                          
+                                     final updatedItem = Items.fromJson({
+                                    ...data.toJson(),
+                                    'val': data.val - 1,
+                                  });
+                                                            
                           context
-                              .read<ListBloc>()
-                              .add(UpdateItem(data['_id'], updatedItem));
-                              context
-                              .read<ListBloc>()
-                              .add(counting('sub')); 
+                              .read<AuthBloc>()
+                              .add(UpdateItems(data.id, updatedItem,'sub'));
+                             
                               
                           
                                               
@@ -145,7 +141,7 @@ class _CardsState extends State<Cards> {
                                     constraints: BoxConstraints(minWidth: 24.w, minHeight: 24.h),
                                   ),
                                   Text(
-                                    data['val'].toString(),
+                                    data.val.toString(),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14.sp,
@@ -154,18 +150,15 @@ class _CardsState extends State<Cards> {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                       final updatedItem = {
-                            ...data,
-                            'val': data['val']+1
-                                
-                          };
+                                      final updatedItem = Items.fromJson({
+                                      ...data.toJson(),
+                                      'val': data.val + 1,
+                                    });
                                                 
                           context
-                              .read<ListBloc>()
-                              .add(UpdateItem(data['_id'], updatedItem));
-                              context
-                              .read<ListBloc>()
-                              .add(counting('add')); 
+                              .read<AuthBloc>()
+                              .add(UpdateItems(data.id, updatedItem,'add'));
+                             
                               
                           
                                               
@@ -189,13 +182,13 @@ class _CardsState extends State<Cards> {
                   borderRadius: BorderRadius.circular(5.r),
                 ),
                 child: Text(
-                  data['quantity'],
+                  data.quantity,
                   style: TextStyle(color: Color(0xff6367bb), fontSize: 14.sp,fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(height: 5.h),
               Text(
-                data['name'],
+                data.name,
                 style: Theme.of(context).textTheme.titleMedium
               ),
               SizedBox(height: 5.h),
@@ -214,14 +207,14 @@ class _CardsState extends State<Cards> {
                   Icon(Icons.timelapse, color: Colors.green, size: 16.sp),
                   SizedBox(width: 4.w),
                   Text(
-                    data['time'],
+                    data.time,
                     style: TextStyle(fontSize: 12.sp,fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
               SizedBox(height: 5.h),
               Text(
-                data['rate'],
+                data.rate,
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: Colors.black),
               ),
               SizedBox(height: 10.h),
@@ -230,7 +223,10 @@ class _CardsState extends State<Cards> {
         }).toList(),
       ),
     );
-        });
+        }
+        else{
+          return Container();
+        }});
   }
 
   Icon icon() => Icon(Icons.star, color: Colors.amber, size: 16.sp);

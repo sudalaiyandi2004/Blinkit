@@ -1,7 +1,8 @@
 
 import 'package:blinkit/appBar.dart';
-import 'package:blinkit/bloc/api.dart';
-import 'package:blinkit/bloc/bloc.dart';
+
+import 'package:blinkit/blocs/ads_bloc/ads_bloc.dart';
+import 'package:blinkit/blocs/items_bloc/items_bloc.dart';
 
 
 import 'package:blinkit/theme/theme.dart';
@@ -25,12 +26,17 @@ class MyApp extends StatelessWidget {
       builder: (context,child) => MaterialApp(
         theme: lightTheme,
         debugShowCheckedModeBanner: false,
-        home: BlocProvider(
-        create: (context) => ListBloc(userRepos: UserRepositors()),
-        child: Home(),
-      ),
-      ),
-    );
+        home: MultiBlocProvider(
+          providers:[ 
+          BlocProvider(
+          create: (context) => AppBloc()),
+          BlocProvider(
+          create: (context) => AuthBloc())],
+          child: Home(),
+                ),
+        ),
+      );
+    
   }
 }
 

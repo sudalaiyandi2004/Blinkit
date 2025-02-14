@@ -1,7 +1,9 @@
 import 'package:blinkit/alls.dart';
 import 'package:blinkit/bloc/bloc.dart';
 import 'package:blinkit/bloc/event.dart';
-import 'package:blinkit/bloc/state.dart';
+
+import 'package:blinkit/blocs/ads_bloc/ads_bloc.dart';
+import 'package:blinkit/blocs/items_bloc/items_bloc.dart';
 
 import 'package:blinkit/comp/tf.dart';
 import 'package:blinkit/electronics.dart';
@@ -21,18 +23,35 @@ class All extends StatefulWidget {
   State<All> createState() => _AllState();
 }
 
-class _AllState extends State<All> with AutomaticKeepAliveClientMixin<All> {
+class _AllState extends State<All>  {
   late List<Map<String, dynamic>> items;
   final ScrollController _scrollController = ScrollController();
   late int selectedIndex = 0;
-   @override
-  bool get wantKeepAlive => true;
+  late final AuthBloc authBloc;
+  late bool des=false;
+  Future<void>setIndex(int value) async {
+  // Get SharedPreferences instance
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+  // Set value for the given key
+  await prefs.setInt('ind', value);
+
+
+}
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    context.read<ListBloc>().add(LoadItems());
+    setIndex(0);
+   
+    if(des==false){
+    context.read<AppBloc>().add(CallAdsApi());
+    
+    des=true;
+    }
+    authBloc = BlocProvider.of<AuthBloc>(context);
     _getSelectedIndex();
+    context.read<AuthBloc>().add(GetCartValue());
   }
 
   void _onScroll() {
@@ -53,10 +72,18 @@ class _AllState extends State<All> with AutomaticKeepAliveClientMixin<All> {
     _scrollController.dispose();
     super.dispose();
   }
+  Future<int?>getIndex() async {
+  
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+  
+  return  prefs.getInt('ind');
 
+}
+int? currentIndexs=0;
   @override
   Widget build(BuildContext context) {
-     super.build(context);
+      
     final List<Color> appBarColors = [
       //Color(0xffffac04),
       Colors.amber,
@@ -64,20 +91,21 @@ class _AllState extends State<All> with AutomaticKeepAliveClientMixin<All> {
       Colors.redAccent,
       Colors.lightBlueAccent
     ];
-
+    
     final height = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      body: BlocBuilder<ListBloc, ListState>(
+      
+      body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          if (state.isLoading && state.items.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.errorMessage.isNotEmpty) {
-            return Center(child: Text(state.errorMessage));
-          }
-
+          
+          getIndex().then((result) {
+      currentIndex=result ?? 0;
+    
+    });
+          
+         
+          if(state is StateData){
+          
           return DefaultTabController(
             length: 4,
             child: ScrollConfiguration(
@@ -87,14 +115,14 @@ class _AllState extends State<All> with AutomaticKeepAliveClientMixin<All> {
                 slivers: [
                   SliverAppBar(
                     
-                    backgroundColor: appBarColors[state.ind],
+                    backgroundColor: appBarColors[currentIndex],
                     expandedHeight: 80.r, 
                     pinned:false,
                     elevation: 0,
                     floating: false,
                     flexibleSpace: FlexibleSpaceBar(
                       background: Container(
-                        color: appBarColors[state.ind],
+                        color: appBarColors[currentIndex],
                         alignment: Alignment.center,
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
@@ -134,7 +162,7 @@ class _AllState extends State<All> with AutomaticKeepAliveClientMixin<All> {
                   SliverFillRemaining(
                     child: TabBarView(
                       children: [
-                        alls(items: state.items),
+                        alls(),
                         Electronics(),
                         Fashion(),
                         Groceries(),
@@ -144,24 +172,45 @@ class _AllState extends State<All> with AutomaticKeepAliveClientMixin<All> {
                 ],
               ),
             ),
-          );
-        },
-      ),
+          );}
+          else{
+            return Container();
+          }
+        }
+      )
     );
+    
   }
 }
-
+int currentIndex=0;
 class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final double maxHeight;
   final List<Color> appBarColors = [
-    //Color(0xffffac04),
     Colors.amber,
-    Colors.green,
-    Colors.redAccent,
-    Colors.lightBlueAccent
+      Colors.green,
+      Colors.redAccent,
+      Colors.lightBlueAccent
   ];
+  
+      Future<void>setIndex(int value) async {
+  // Get SharedPreferences instance
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+  // Set value for the given key
+  await prefs.setInt('ind', value);
 
+
+}
+
+Future<int?>getIndex() async {
+  // Get SharedPreferences instance
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+  // Set value for the given key
+  return  prefs.getInt('ind');
+
+}
   _SliverPersistentHeaderWithTabBarDelegate({
     required this.minHeight,
     required this.maxHeight,
@@ -172,70 +221,66 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
 
   @override
   double get maxExtent => maxHeight;
-
+  
   @override
   Widget build(
     BuildContext context,
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    double percentage = (shrinkOffset / maxExtent).clamp(0.0, 1.0);
-
-    Color color = Color.lerp(Colors.amber, Color(0xffd6d6d6), percentage)!;
-
-    return BlocBuilder<ListBloc, ListState>(
+    
+    BlocProvider.of<AuthBloc>(context);
+    return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        if (state.isLoading && state.items.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (state.errorMessage.isNotEmpty) {
-          return Center(child: Text(state.errorMessage));
-        }
-
-        return Container(
           
+        if (state is StateData) {
+         
+          final Color backgroundColor = (currentIndex == 0 )
+            ? Color.lerp(Colors.amber, Color(0xffd6d6d6), shrinkOffset / maxExtent)!
+            : appBarColors[currentIndex];
+
+          return Container(
             decoration: BoxDecoration(
-             
-              color: state.ind == 0 ? color : appBarColors[state.ind],
+              color: backgroundColor,
             ),
-            
-          
-          
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: Texts(),
-                ),
-                TabBar(
-                  dividerColor: state.ind == 0 ? color : appBarColors[state.ind],
-                  isScrollable: true,
-                  tabAlignment: TabAlignment.start,
-                  onTap: (index) async {
-                      context.read<ListBloc>().add(updateIndex(index));
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: Texts(),
+                  ),
+                  TabBar(
+                    dividerColor: backgroundColor,
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.start,
+                    onTap: (index) {
+                      currentIndex=index;
+                      setIndex(index);
+                      context.read<AuthBloc>().add(GetCartValue());
                     },
-                  tabs: [
-                    tabs('All', Icon(Icons.shopping_bag, size: 30.r)),
-                    tabs('Electronics', Icon(Icons.headphones_outlined, size: 30.r)),
-                    tabs('Fashion', Icon(Icons.face_sharp, size: 30.r)),
-                    tabs('Groceries', Icon(Icons.local_grocery_store_rounded, size: 30.r)),
-                    tabs('Kids', Icon(Icons.toys, size: 30.r)),
-                    tabs('Gifts', Icon(Icons.card_giftcard_sharp, size: 30.r)),
-                  ],
-                
-                  labelStyle: Theme.of(context).textTheme.titleMedium,
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Color(0xFF24181c),
-                  indicatorColor: Colors.black,
-                ),
-              ],
+                    tabs: [
+                      tabs('All', Icon(Icons.shopping_bag, size: 30.r)),
+                      tabs('Electronics', Icon(Icons.headphones_outlined, size: 30.r)),
+                      tabs('Fashion', Icon(Icons.face_sharp, size: 30.r)),
+                      tabs('Groceries', Icon(Icons.local_grocery_store_rounded, size: 30.r)),
+                      tabs('Kids', Icon(Icons.toys, size: 30.r)),
+                      tabs('Gifts', Icon(Icons.card_giftcard_sharp, size: 30.r)),
+                    ],
+                    labelStyle: Theme.of(context).textTheme.titleMedium,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Color(0xFF24181c),
+                    indicatorColor: Colors.black,
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          return Container();
+        }
       },
     );
   }
@@ -244,6 +289,6 @@ class _SliverPersistentHeaderWithTabBarDelegate extends SliverPersistentHeaderDe
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
+    return true;
   }
 }

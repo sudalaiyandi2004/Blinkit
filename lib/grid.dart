@@ -1,10 +1,11 @@
-import 'package:blinkit/bloc/bloc.dart';
-import 'package:blinkit/bloc/state.dart';
+
+import 'package:blinkit/blocs/items_bloc/items_bloc.dart';
+import 'package:blinkit/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 class Gird extends StatefulWidget {
-  final List<Map<String, dynamic>> originalItems;
+  final List<Items> originalItems;
   const Gird({super.key,required this.originalItems});
 
   @override
@@ -15,16 +16,10 @@ class _GirdState extends State<Gird> {
   @override
   Widget build(BuildContext context) {
     final width=MediaQuery.of(context).size.width;
-    return BlocBuilder<ListBloc, ListState>(
+    return BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           
-          if (state.isLoading && state.items.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.errorMessage.isNotEmpty) {
-            return Center(child: Text(state.errorMessage));
-          }
+          
    return GridView.builder(
   shrinkWrap: true,
   physics: NeverScrollableScrollPhysics(),
@@ -45,10 +40,10 @@ class _GirdState extends State<Gird> {
       width: 0.3*width,
       child: Column(
         children: [
-          Expanded(child: ClipRRect(borderRadius: BorderRadius.circular(10.r),child: Image.network(data['img'],
+          Expanded(child: ClipRRect(borderRadius: BorderRadius.circular(10.r),child: Image.network(data.img,
 ))),
           SizedBox(height: 5,),
-          Text(data['name'],style: Theme.of(context).textTheme.titleMedium)
+          Text(data.name,style: Theme.of(context).textTheme.titleMedium)
         ],
       ),
     );

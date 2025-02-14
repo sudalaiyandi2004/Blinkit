@@ -1,33 +1,40 @@
-import 'package:blinkit/bloc/bloc.dart';
-import 'package:blinkit/bloc/state.dart';
+
+import 'package:blinkit/blocs/ads_bloc/ads_bloc.dart';
 import 'package:blinkit/comp/button.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ImageCarousel extends StatelessWidget {
+class ImageCarousel extends StatefulWidget {
+
+  const ImageCarousel({super.key});
+
+  @override
+  State<ImageCarousel> createState() => _ImageCarouselState();
+}
+
+class _ImageCarouselState extends State<ImageCarousel> {
   final List<String> imageUrls = [
     'assets/1.jpeg',
     'assets/5.jpeg',
     'assets/1.jpeg',
     'assets/5.jpeg',
   ];
-
-  ImageCarousel({super.key});
+  late final AppBloc  appBloc;
+  @override
+  void initState(){
+    super.initState();
+     appBloc = BlocProvider.of<AppBloc>(context);
+    
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ListBloc, ListState>(
+    return BlocBuilder<AppBloc, AppState>(
         builder: (context, state) {
           
-          if (state.isLoading && state.items.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.errorMessage.isNotEmpty) {
-            return Center(child: Text(state.errorMessage));
-          }
+          
     return Scaffold(
       body: Center(
         child: CarouselSlider(
@@ -41,13 +48,13 @@ class ImageCarousel extends StatelessWidget {
             autoPlayAnimationDuration: Duration(milliseconds: 800),
             autoPlayCurve: Curves.fastOutSlowIn,
           ),
-          items: state.filteredItems.map((item) {
+          items: (appBloc.stateData.ads ??[]).map((item) {
             return Container(
               width: 0.95.sw, 
               
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(item['img']),
+                  image: NetworkImage(item.img),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(10.r), 
@@ -62,7 +69,7 @@ class ImageCarousel extends StatelessWidget {
                     SizedBox(
                       width: 0.5.sw,
                       child: Text(
-                        item['title'],
+                        item.title,
                         softWrap: true,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
@@ -73,7 +80,7 @@ class ImageCarousel extends StatelessWidget {
                       child: Text(
                         softWrap: true,
                         maxLines: 2,
-                        item['subtitle'],
+                        item.subtitle,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),

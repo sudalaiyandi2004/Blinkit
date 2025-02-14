@@ -1,8 +1,8 @@
 
-import 'package:blinkit/bloc/bloc.dart';
-import 'package:blinkit/bloc/state.dart';
+import 'package:blinkit/blocs/items_bloc/items_bloc.dart';
+import 'package:blinkit/cards.dart';
 
-import 'package:blinkit/grid.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,20 +17,18 @@ class Electronics extends StatefulWidget {
 
 class _ElectronicsState extends State<Electronics> {
   
-  
+  late final AuthBloc authBloc;
+  @override
+  void initState(){
+    super.initState();
+     authBloc = BlocProvider.of<AuthBloc>(context);
+  }
   @override
   Widget build(BuildContext context) {
     final width=MediaQuery.of(context).size.width;
-      return BlocBuilder<ListBloc, ListState>(
+      return BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          
-          if (state.isLoading && state.items.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.errorMessage.isNotEmpty) {
-            return Center(child: Text(state.errorMessage));
-          }
+         
     return Padding(
             padding: const EdgeInsets.all(12.0),
             child: SingleChildScrollView(
@@ -41,7 +39,7 @@ class _ElectronicsState extends State<Electronics> {
                   
                     Text("Sounds",style:Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold)),
                     SizedBox(height: 20,),
-                    Gird(originalItems: state.originalItems['electronics'] ?? []),
+                    Cards(originalItems: 'electronics'),
                     SizedBox(height: 20,),
                     Center(child: ElevatedButton(onPressed: (){}, style: ElevatedButton.styleFrom(foregroundColor: Colors.deepPurpleAccent,minimumSize: Size(width*0.9, 50)), 
                      child: Row(

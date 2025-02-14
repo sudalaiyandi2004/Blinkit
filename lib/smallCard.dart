@@ -1,12 +1,13 @@
 // ignore_for_file: file_names
 
-import 'package:blinkit/bloc/bloc.dart';
-import 'package:blinkit/bloc/state.dart';
+
+import 'package:blinkit/blocs/items_bloc/items_bloc.dart';
+import 'package:blinkit/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SmallCard extends StatefulWidget {
-  final List<Map<String, dynamic>> originalItems;
+  final List<Items> originalItems;
   const SmallCard({super.key,required this.originalItems});
   
   @override
@@ -15,26 +16,22 @@ class SmallCard extends StatefulWidget {
 
 class _SmallCardState extends State<SmallCard> {
  
-
+  late final AuthBloc authBloc;
   @override
   void initState() {
     super.initState();
+    
+    authBloc = BlocProvider.of<AuthBloc>(context);
    
     
   }
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return BlocBuilder<ListBloc, ListState>(
+    return BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           
-          if (state.isLoading && state.items.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.errorMessage.isNotEmpty) {
-            return Center(child: Text(state.errorMessage));
-          }
+          
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -46,7 +43,7 @@ class _SmallCardState extends State<SmallCard> {
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(data['img']),
+                          image: NetworkImage(data.img),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(18.r),
@@ -57,7 +54,7 @@ class _SmallCardState extends State<SmallCard> {
               
               ),
               SizedBox(height: 5,),
-              Text(data['name'],style: Theme.of(context).textTheme.titleMedium)
+              Text(data.name,style: Theme.of(context).textTheme.titleMedium)
             ],
           );
         

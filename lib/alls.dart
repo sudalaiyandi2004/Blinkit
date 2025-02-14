@@ -1,19 +1,20 @@
 import 'package:blinkit/ads.dart';
-import 'package:blinkit/bloc/bloc.dart';
-import 'package:blinkit/bloc/state.dart';
 
+import 'package:blinkit/blocs/items_bloc/items_bloc.dart';
 import 'package:blinkit/cards.dart';
+
 import 'package:blinkit/grid.dart';
 import 'package:blinkit/smallCard.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 // ignore: camel_case_types
 class alls extends StatefulWidget {
-  final List<Map<String, dynamic>> items;
-
-  const alls({super.key,required this.items});
+ 
+  const alls({super.key});
 
   @override
   State<alls> createState() => _allsState();
@@ -21,31 +22,32 @@ class alls extends StatefulWidget {
 
 // ignore: camel_case_types
 class _allsState extends State<alls> {
-  late List<Map<String, dynamic>> items;
- 
+  
+  late final AuthBloc authBloc;
+  
+
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    items = List<Map<String, dynamic>>.from(widget.items);
+     authBloc = BlocProvider.of<AuthBloc>(context);
+     
   }
+   
+   
+    
+   
+  
 
   @override
   Widget build(BuildContext context) {
-   
+    
     final width = MediaQuery.of(context).size.width;
-
-    return BlocBuilder<ListBloc, ListState>(
+    
+    return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        if (state.isLoading && state.items.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (state.errorMessage.isNotEmpty) {
-          return Center(child: Text(state.errorMessage));
-        }
-        
-        return Scaffold(
-          body: Padding(
+       
+        return 
+         Padding(
             padding: const EdgeInsets.all(12.0),
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
@@ -62,7 +64,7 @@ class _allsState extends State<alls> {
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold,fontSize: 22),
                     ),
                     SizedBox(height: 20),
-                    Cards(originalItems: state.originalItems['special'] ?? []),
+                    Cards(originalItems: 'special'),
                     SizedBox(height: 20),
                     Center(
                       child: ElevatedButton(
@@ -89,11 +91,14 @@ class _allsState extends State<alls> {
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 20.h),
-                    SmallCard(originalItems: state.originalItems['grocery'] ?? []),
+                    SmallCard(originalItems: authBloc.stateData.items?['grocery'] ?? []),
                     SizedBox(height: 20.h),
                     Center(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        
+                        onPressed: () {
+                          
+                        },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.deepPurpleAccent,
                           minimumSize: Size(width * 0.9, 50),
@@ -116,7 +121,7 @@ class _allsState extends State<alls> {
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 20),
-                    SmallCard(originalItems: state.originalItems['electronics'] ?? []),
+                    SmallCard(originalItems: authBloc.stateData.items?['electronics'] ?? []),
                     SizedBox(height: 20.h),
                     Center(
                       child: ElevatedButton(
@@ -143,7 +148,7 @@ class _allsState extends State<alls> {
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 20),
-                    Gird(originalItems: state.originalItems['Fashion'] ?? []),
+                    Gird(originalItems: authBloc.stateData.items?['Fashion'] ?? []),
                     SizedBox(height: 20),
                     Center(
                       child: ElevatedButton(
@@ -168,10 +173,10 @@ class _allsState extends State<alls> {
                 ),
               ),
             ),
-          ),
+          );
           
              
-        );
+        
       },
     );
   }
