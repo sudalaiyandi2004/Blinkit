@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:blinkit/about.dart';
-import 'package:blinkit/all.dart';
+import 'package:blinkit/tabBar.dart';
 
 import 'package:blinkit/blocs/items_bloc/items_bloc.dart';
 import 'package:blinkit/core/preference_client/preference_client.dart';

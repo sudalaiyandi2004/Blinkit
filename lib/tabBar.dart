@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:blinkit/alls.dart';
 import 'package:blinkit/bloc/bloc.dart';
 import 'package:blinkit/bloc/event.dart';
